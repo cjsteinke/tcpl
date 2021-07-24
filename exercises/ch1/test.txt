@@ -1,1 +1,3 @@
-There might be different reasons a worker node becomes unusable such as because of a hardware problem, a cloud provider problem, or if there are network issues between worker and master node, the Kubernetes master handles it effectively. 
+There might be different reasons a worker node becomes unusable such as because
+of a hardware problem, a cloud provider problem, or if there are network issues 
+between worker and master node, the Kubernetes master handles it effectively. 
