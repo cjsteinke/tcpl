@@ -1,63 +1,74 @@
 /**
- * Exercise 1.17
- * exercise1-17.c
- *
- * Write a program to print all input lines that are longer than 80 characters. 
- *
- */
+ **/
 
 #include <stdio.h>
-#define MAXLINE 1000 /* maximum input line length */
+#define MAXLINE 1000 /* max input line length */
 
 int mygetline(char line[], int maxline);
-void reverse(char from[], char to[], int len);
+void reverse(char line[], char enil[], int len);
 
-/* print all input lines that are longer than 80 characters. */
-
+/* print all input lines in reverse. */
 int main()
 {
+
   char line[MAXLINE];
   char enil[MAXLINE];
-  int len = 0; 
+
+  int len = 0;
 
   while ((len = mygetline(line, MAXLINE)) > 0) {
     reverse(line, enil, len);
+    printf("%s\n", enil);
   }
 }
 
-/* mygetline: read a line intos, return length. */
-int mygetline(char s[], int lim)
+/* mygetline: read a line and return it's length */
+int mygetline(char myline[], int lim)
 {
-	int c, i;
-	for (i = 0; i < lim-1 && (c = getchar()) !=EOF && c != '\n'; i++)
-		s[i] = c;
-	if (c == '\n') {
-		s[i] = c;
-		++i;
-	}
-	s[i] = c = '\0'; 
-	return i;
+
+  int c, i;
+
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; i++)
+    myline[i] = c;
+  if (c == '\n') {
+    myline[i] = c;
+    ++i;
+  }
+
+  myline[i] = c  = '\0';
+  return i;
+  
 }
 
-/* reverse(): reverse 'from' */
-void reverse(char from[], char to[], int len)
+/* reverse: reverse a line */
+void reverse(char s[], char r[], int len)
 {
-  int i, k;
-  char temp;
+  int i, j, k;
 
+  /* Zero out the reverse array */
   for (k = 0; k <= len; k++)
-    to[k] = 0;
+      r[k] = 0; 
 
   i = len;
   
-  while ( i >= 0) {
-    if (from[i] != '\0' || from[i] != '\n') {
-      to[len - i] = from[i];
-    }
-    printf("%c", to[len - i]);
+  /* Walk down the length of the string to the end of line char */
+  while (s[i] != '\0')
+    ++i;
+
+  /* back up one character to the new line character. */
+  --i;
+  
+  if (s[i] == '\n')
     --i;
-    printf("%s", to);
+
+  /* Get the size of the string s */
+  int s_size = i;
+  
+  for (j = 0; j <= s_size; j++) {
+    r[j] = s[i]; /* assign the characters in reverse to the r string */
+    --i; /* decrement s index */
+
   }
 }
 
-
+		      
