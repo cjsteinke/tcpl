@@ -14,7 +14,7 @@ char longest[MAXLINE];
 
 
 int mygetline(void);
-void copy(void);
+void gitqcopy(void);
 
 /* print longest input line; external variables version */
 int main()
