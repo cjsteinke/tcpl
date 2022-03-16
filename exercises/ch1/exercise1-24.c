@@ -1,57 +1,100 @@
 /*
- * A program to check a c program for 
+ * A program to check a c program for
  * rudimentary syntax errors like
- * unblanaced parentheses, brackets 
- * and braces. 
+ * unblanaced parentheses, brackets
+ * and braces.
  */
 #include <stdio.h>
 #include <stdlib.h>
 
-int check_chars(int c);
+void check_chars(int c);
+void in_comment(void);
+void in_quote(int c);
+
+int brace, bracket, paren;
 
 int main()
 {
-    int c; 
+	int c, next_c;
 
-    while ((c = getchar()) != EOF) {
-        check_chars(c);
-    }
+	extern int brace, bracket, paren;
 
-    return 0;
+	while ((c = getchar()) != EOF) {
+		if (c == '/' ) {
+			if ((next_c = getchar()) == '*') {
+				in_comment();
+			} else {
+				check_chars(c);
+			}
+		} else if (c == '\'' || c == '"') {
+			in_quote(c);
+		} else
+			check_chars(c);
+
+		if (brace < 0) {
+			printf("Unbalanced parentheses\n");
+			brace = 0;
+		} else if (bracket < 0) {
+			printf("Unbalanced parentheses\n");
+	                bracket = 0;
+		} else if (paren < 0) {
+			printf("Unbalanced parentheses\n");
+			paren = 0;
+		}
+
+		if (brace > 0)
+			printf("Unbalanced parentheses\n");
+		if (bracket > 0)
+			printf("Unbalanced parentheses\n");
+		if (paren > 0)
+			printf("Unbalanced parentheses\n");
+	}
+	return 0;
 }
 
-int check_chars(int c) 
+void check_chars(int c)
 {
-    int left_paren = 0; 
-    int right_paren = 0; 
-    int left_brack = 0;
-    int right_brack = 0; 
-    int left_brace = 0;
-    int right_brace = 0; 
+	extern int brace, bracket, paren;
 
-    if (c == '{') {
-        left_paren = 1;
-    } else if (c == "}") {
-        right_paren = 1;
-    } else if (c == "[") {
-        left_brack = 1;
-    } else if (c == "]") {
-        right_brack = 1;
-    } else if (c == "{") {
-        left_brace = 1;
-    } else if (c == "}") {
-        right_brace = 1;
-    } 
+	if (c == '{') {
+		++brace;
+	} else if (c == '}') {
+		--brace;
+	} else if (c == '[') {
+		++bracket;
+	} else if (c == ']') {
+		--bracket;
+	} else if (c == '(') {
+		++paren;
+	} else if (c == '}') {
+		--paren;
+	}
+}
 
-    if ((left_paren == 1 && right_paren == 0) || (left_paren == 0 && right_paren == 1)) {
-        printf("Syntax error: missing parentheses\n");
-    }
 
-    if ((left_brack == 1 && right_brack == 0) || (left_brack == 0 && right_brack == 1)) {
-        printf("Syntax error: missing bracket\n");
-    }
+void in_comment()
+{
+	int c, next_c;
 
-    if ((left_brace == 1 && right_brace == 0) || (left_brace == 0 && right_brace == 1)) {
-        printf("Syntax error: missing brace\n");
-    }
+	/* previous character */
+	c = getchar();
+	/* current character */
+	next_c = getchar();
+
+	/* Search for the end of the comment */
+	while (c != '*' || next_c != '/') {
+		c = next_c;
+		next_c = getchar();
+	}
+}
+
+void in_quote(int c)
+{
+	int next_c;
+
+	/* walk to the end of the quote */
+	while ((next_c = getchar()) != c)
+		/* Ignore escape sequences */
+		if (next_c == '\\')
+			getchar();
 }
